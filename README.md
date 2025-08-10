@@ -1,5 +1,3 @@
-<div align="center">
-
 <h1>Foundry Basics Course</h1>
 
 ## Mở đầu
