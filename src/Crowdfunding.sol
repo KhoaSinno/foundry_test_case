@@ -38,10 +38,10 @@ contract Crowdfunding {
     }
 
     function fund() public payable {
-        require(
-            msg.value.getConversionRate() >= MINIMUM_USD,
-            "no available amount"
-        );
+        // require(
+        //     msg.value.getConversionRate() >= MINIMUM_USD,
+        //     "no available amount"
+        // );
 
         funderToAmount[msg.sender] += msg.value;
         bool isFunded = isFunders[msg.sender];
