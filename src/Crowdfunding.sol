@@ -11,9 +11,9 @@ contract Crowdfunding {
     uint256 public constant MINIMUM_USD = 5e18; // 5 USD in Wei
     address public immutable i_owner;
 
-    mapping(address => bool) public isFunders;
-    mapping(address => uint256) public funderToAmount;
-    address[] public funders;
+    mapping(address => bool) public s_is_funders;
+    mapping(address => uint256) public s_funderToAmount;
+    address[] public s_funders;
 
     event Funded(address indexed funder, uint256 value);
     event Withdrawn(uint256 value);
@@ -43,12 +43,12 @@ contract Crowdfunding {
         //     "no available amount"
         // );
 
-        funderToAmount[msg.sender] += msg.value;
-        bool isFunded = isFunders[msg.sender];
+        s_funderToAmount[msg.sender] += msg.value;
+        bool isFunded = s_is_funders[msg.sender];
 
         if (!isFunded) {
-            funders.push(msg.sender);
-            isFunders[msg.sender] = true;
+            s_funders.push(msg.sender);
+            s_is_funders[msg.sender] = true;
         }
 
         emit Funded(msg.sender, msg.value);
@@ -62,7 +62,7 @@ contract Crowdfunding {
     }
 
     // Tìm ra có bao nhiêu người đã đóng góp
-    function getFundersLength() public view returns (uint256) {
-        return funders.length;
+    function gets_fundersLength() public view returns (uint256) {
+        return s_funders.length;
     }
 }
