@@ -2,21 +2,28 @@
 pragma solidity ^0.8.0;
 
 import {Test, console} from "forge-std/Test.sol";
-
+import {MockV3Aggregator} from "@chainlink-brownie-contracts/contracts/src/v0.8/tests/MockV3Aggregator.sol";
 import "../../src/Crowdfunding.sol";
 
 contract CrowdfundingTest is Test {
     Crowdfunding crowdfunding;
     event Funded(address indexed funder, uint256 value);
-
+    address public ethPriceFeed;
     // Fake address user
     address public constant USER = address(1);
 
     uint256 public constant AMOUNT_OF_USER = 100 ether;
     uint256 public constant AMOUNT_TO_FUND = 5 ether;
+    uint8 public constant PRICE_FEED_DECIMALS = 8;
+    int256 public constant PRICE_FEED_INITIAL_ANSWER = 2000e8;
 
     function setUp() external {
-        crowdfunding = new Crowdfunding();
+        MockV3Aggregator mockV3Aggregator = new MockV3Aggregator(
+            PRICE_FEED_DECIMALS,
+            PRICE_FEED_INITIAL_ANSWER
+        );
+        ethPriceFeed = address(mockV3Aggregator);
+        crowdfunding = new Crowdfunding(ethPriceFeed);
         vm.deal(USER, AMOUNT_OF_USER); // Give USER some ether
     }
 

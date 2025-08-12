@@ -10,6 +10,7 @@ contract Crowdfunding {
 
     uint256 public constant MINIMUM_USD = 5e18; // 5 USD in Wei
     address public immutable i_owner;
+    address public immutable i_ethUsdPriceFeed;
 
     mapping(address => bool) public s_is_funders;
     mapping(address => uint256) public s_funderToAmount;
@@ -26,8 +27,9 @@ contract Crowdfunding {
         fund();
     }
 
-    constructor() {
+    constructor(address ethUsdPriceFeed) {
         i_owner = msg.sender;
+        i_ethUsdPriceFeed = ethUsdPriceFeed;
     }
 
     modifier onlyOwner() {
@@ -38,10 +40,10 @@ contract Crowdfunding {
     }
 
     function fund() public payable {
-        // require(
-        //     msg.value.getConversionRate() >= MINIMUM_USD,
-        //     "no available amount"
-        // );
+        require(
+            msg.value.getConversionRate(address(i_ethUsdPriceFeed)) >= MINIMUM_USD,
+            "no available amount"
+        );
 
         s_funderToAmount[msg.sender] += msg.value;
         bool isFunded = s_is_funders[msg.sender];
